@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dao.ShixigangweiDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.entity.ShixigangweiEntity" id="shixigangweiMap">
+        <result property="qiyemingcheng" column="qiyemingcheng"/>
+        <result property="shiximingcheng" column="shiximingcheng"/>
+        <result property="gangweileixing" column="gangweileixing"/>
+        <result property="fengmian" column="fengmian"/>
+        <result property="shixigangwei" column="shixigangwei"/>
+        <result property="gangweiyaoqiu" column="gangweiyaoqiu"/>
+        <result property="xinzidaiyu" column="xinzidaiyu"/>
+        <result property="gongzuodidian" column="gongzuodidian"/>
+        <result property="gangweijianjie" column="gangweijianjie"/>
+        <result property="qiyezhanghao" column="qiyezhanghao"/>
+        <result property="fuzeren" column="fuzeren"/>
+        <result property="sfsh" column="sfsh"/>
+        <result property="shhf" column="shhf"/>
+    </resultMap>
+
+	<select id="selectListVO"
+		resultType="com.entity.vo.ShixigangweiVO" >
+		SELECT * FROM shixigangwei  shixigangwei         
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectVO"
+		resultType="com.entity.vo.ShixigangweiVO" >
+		SELECT  shixigangwei.* FROM shixigangwei  shixigangwei 	
+ 		<where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+
+    <select id="selectListView"
+		resultType="com.entity.view.ShixigangweiView" >
+
+		SELECT  shixigangwei.* FROM shixigangwei  shixigangwei 	        
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectView"
+		resultType="com.entity.view.ShixigangweiView" >
+		SELECT * FROM shixigangwei  shixigangwei <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+
+    <select id="selectValue" resultType="map" >
+        SELECT ${params.xColumn}, ROUND(sum(${params.yColumn}),1) total FROM shixigangwei
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.xColumn}
+    </select>
+
+    <select id="selectTimeStatValue" resultType="map" >
+        <if test = 'params.timeStatType == "日"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m-%d') ${params.xColumn}, sum(${params.yColumn}) total FROM shixigangwei
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y-%m-%d')
+        </if>
+        <if test = 'params.timeStatType == "月"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y-%m') ${params.xColumn}, sum(${params.yColumn}) total FROM shixigangwei
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y-%m')
+        </if>
+        <if test='params.timeStatType == "季"'>
+                SELECT CONCAT(YEAR(${params.xColumn}), ' - ', ELT(QUARTER(${params.xColumn}), '第一季度', '第二季度', '第三季度', '第四季度')) as ${params.xColumn}, sum(${params.yColumn}) total FROM orders
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by CONCAT(YEAR(${params.xColumn}), ' - ', ELT(QUARTER(${params.xColumn}), '第一季度', '第二季度', '第三季度', '第四季度'))
+        </if>
+        <if test = 'params.timeStatType == "年"'>
+                SELECT DATE_FORMAT(${params.xColumn},'%Y') ${params.xColumn}, sum(${params.yColumn}) total FROM shixigangwei
+                <where> 1=1 ${ew.sqlSegment}</where>
+                group by DATE_FORMAT(${params.xColumn},'%Y')
+        </if>
+    </select>
+
+    <select id="selectGroup" resultType="map" >
+        SELECT ${params.column} , count(1) total FROM shixigangwei
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.column}
+    </select>
+
+
+
+
+</mapper>
